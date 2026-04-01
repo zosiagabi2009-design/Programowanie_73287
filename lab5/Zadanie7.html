@@ -1,0 +1,16 @@
+<script>
+function naSzesnastkowy(n) {
+	let znaki = "0123456789ABCDEF";
+	let wynik = "";
+	
+	while (n > 0) {
+		let reszta = n % 16;
+		wynik = znaki[reszta] + wynik;
+		n = Math.floor(n / 16);
+	}
+	
+	console.log(wynik);
+}
+
+naSzesnastkowy(255);
+</script>
