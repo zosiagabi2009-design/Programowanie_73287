@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Rejestracja</title>
+</head>
+<body>
+
+<h2>Formularz rejestracji</h2>
+
+<form onsubmit="return waliduj()">
+
+Nazwa użytkownika: <br>
+<input type="text" id="login"><br><br>
+
+Email: <br>
+<input type="text" id="email"><br><br>
+
+Hasło: <br>
+<input type="password" id="haslo"><br><br>
+
+Powtórz hasło: <br>
+<input type="password" id="haslo2"><br><br>
+
+Data urodzenia: <br>
+<input type="date" id="data"><br><br>
+
+Płeć: <br>
+<select id="plec">
+	<option value="">--wybierz--</option>
+	<option>Mężczyzna</option>
+	<option>Kobieta</option>
+	<option>Nie chcę podawać</option>
+</select><br><br>
+
+Akceptuję regulamin:
+<input type="checkbox" id="regulamin"><br><br>
+
+Wersja:<br>
+<input type="radio" name="wersja" value="Darmowa"> Darmowa<br>
+<input type="radio" name="wersja" value="Standardowa"> Standardowa<br>
+<input type="radio" name="wersja" value="Premium"> Premium<br><br>
+
+<input type="submit" value="Zarejestruj się">
+<input type="reset" value="Wyczyść">
+
+</form>
+
+<p id="wynik"></p>
+
+<script>
+function waliduj() {
+
+	let login = document.getElementById("login").value;
+	let email = document.getElementById("email").value;
+	let haslo = document.getElementById("haslo").value;
+	let haslo2 = document.getElementById("haslo2").value;
+	let data = document.getElementById("data").value;
+	let plec = document.getElementById("plec").value;
+	let regulamin = document.getElementById("regulamin").checked;
+	let wersje = document.getElementById("wersja");
+	
+	let wynik = document.getElementById("wynik");
+	
+	try {
+		
+		if (!login || !email || !haslo || !haslo2 || !data || !plec) {
+			throw "Wszystkie pola muszą być wypełnione!";
+			}
+			
+		let loginRegex = /^[a-zA-Z0-9]+$/;
+		if(!loginRegex.test(login)) {
+			throw "Login może zawierać tylko litery i cyfry!";
+		}
+		
+		let hasloRegex = /^(?=.*\d).{8,}$/;
+		if(!hasloRegex.test(haslo)) {
+			throw "Hasło musi mieć min. 8 znaków i jedną cyfrę!";
+		}	
+		
+		if (haslo !== haslo2) {
+			throw "Hasła nie są takie same!;
+		}
+		
+		let emailRegex = /^[^@]+@[^@]+\.[^@]+$/;
+		if(!emailRegex.test(email)) {
+			throw "Niepoprawny email!";
+		}
+		
+		let dzis = new Date();
+		let urodz = new Date(data);
+		
+		let wiek = dzis.getFullYear() - urodz.getFullYear();
+		let m = dzis.getMonth() - urodz.getMonth();
+		
+		if (m < 0 || (m === 0 && dzis.getDate() < urodz.getDate())) {
+			wiek--;
+		}
+		
+		if (wiek < 18) {
+			throw "Musisz mieć co najmniej 18 lat!";
+		}
+		
+		if (!regulamin) {
+			throw "Musisz zaakceptować regulamin!";
+		}
+		
+		let wybranaWersja = "";
+		for (let w of wersje) {
+			if (w.checked) {
+				wybranaWersja = w.value;
+			}
+		}
+		
+		if (wybranaWersja === "") {
+			throw "Wybierz wersję!";
+		}
+		
+		let maska = "*".repeat(haslo.length);
+		
+		let d = urodz.getDate().toString().padStart(2, '0');
+		let mth = (urodz.getMonth()+1).toString().padStart(2, '0');
+		let y = urodz.getFullYear();
+		
+		wynik.innerHTML = 
+			"Nazwa użytkownika: " + login + "<br>" +
+			"Hasło: " + maska + "<br>" +
+			"Email: " + email + "<br>" +
+			"Data urodzenia: " + d + "." + mth + "." + y + "<br>" +
+			"Płeć: " + plec + "<br>" +
+			"Wersja: " + wybranaWersja;
+	} catch (error) {
+		wynik.innerText = "Błąd: " + error;
+	}
+	
+	return false;
+}
+</script>
+
+</body>
+</html>

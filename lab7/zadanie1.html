@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Dzielenie liczb</title>
+</head>
+<body>
+
+<h2>Dzielenie liczb</h2>
+
+<input type="text" id="num1" placeholder="Podaj pierwszą liczbę">
+<input type="text" id="num2" placeholder="Podaj drugą liczbę">
+<button onclick="dziel()">Podziel</button>
+
+<p id="wynik"></p>
+
+<script>
+function dziel() {
+	try {
+		let a = document.getElementById("num1").value;
+		let b = document.getElementById("num2").value;
+		
+		if (a === "" || b === "") {
+			throw "Wypełnij oba pola!";
+		}
+		
+		a = parseFloat(a);
+		b = parseFloat(b);
+		
+		if (isNaN(a) || isNaN(b)) {
+			throw "Podaj poprawne liczby!";
+		}
+		
+		if (b === 0) {
+			throw "Nie można dzielić przez zero!";
+		}
+		
+		let wynik = a / b;
+		document.getElementById("wynik").innerText = "Wynik: " + wynik;
+		
+	} catch (error) {
+		document.getElementById("wynik").innerText = "Błąd: " + error;
+	}
+}
+</script>
+
+</body>
+</html>
