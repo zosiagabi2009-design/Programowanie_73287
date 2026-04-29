@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<body>
+
+<!-- zadanie 1 -->
+<form id="form">
+	Imię: <input type="text" id="imie"><br>
+	Nazwisko: <input type="text" id="nazwisko"><br>
+	Wiek: <input type="number" id="wiek"><br>
+	<button type="submit">Wyślij</button>
+</form>
+
+<p id="wynik"></p>
+
+<script>
+document.getElementById("form").addEventListener("submit", function(e){
+	e.preventDefault();
+	
+	const osoba = {
+		imie: document.getElementById("imie").value,
+		nazwisko: document.getElementById("nazwisko").value,
+		wiek: Number(document.getElementById("wiek").value)
+	};
+	
+	console.log("Obiekt:", osoba);
+	console.log(osoba.imie, osoba.nazwisko, osoba.wiek);
+	
+	const json = JSON.stringify(osoba);
+	console.log("JSON:", json);
+	
+	document.getElementById("wynik").innerText = json;
+});
+	
+<!-- zadanie 2 -->
+class ComplexNumber {
+	constructor(real, imaginary) {
+		this.real = real;
+		this.imaginary = imaginary;
+	}
+	
+	wypisz() {
+		return this.real + (this.imaginary >= 0 ? " + " : " - ") + Math.abs(this.imaginary) + "i";
+	}
+	
+	module() {
+		return Math.sqrt(this.real * this.real + this.imaginary * this.imaginary);
+	}
+}
+
+<!-- zadanie 3 -->
+function generuj(n) {
+	const arr = [];
+	for (let i=0; i<n; i++){
+		const r = Math.floor(Math.random() * 21 - 10);
+		const im = Math.floor(Math.random() * 21 - 10);
+		arr.push(new ComplexNumber(r, im));
+	}
+	return arr;
+}
+
+const dane = generuj(5);
+
+console.log("Dane:");
+dane.forEach(x => console.log(x.wypisz()));
+
+<!-- zadanie 4 -->
+const dodatnie = dane.filter(x => x.real > 0 && x.imaginary > 0);
+console.log("Dodatnie:");
+dodatnie.forEach(x => console.log(x.wypisz()));
+
+<!-- zadanie 5 -->
+const zamienione = dane.map(x => new ComplexNumber(x.imaginary, x.real));
+console.log("Zamienione:");
+zamienione.forEach(x => console.log(x.wypisz()));
+
+<!-- zadanie 6 -->
+const suma = dane.reduce((acc, x) => acc + x.module(), 0);
+console.log("Suma modułów:", suma);
+
+<!-- zadanie 7 -->
+const min = dane.reduce((a, b) => a.module() < b.module() ? a : b);
+console.log("Najmniejszy moduł:", min.wypisz());
+
+<!-- zadanie 8 -->
+const max = dane.reduce((a, b) => a.module() > b.module() ? a : b
+console.log("Największy moduł:", max.wypisz())
+
+</script>
+
+</body>
+</html>
