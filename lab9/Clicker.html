@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pl">
+   <head>
+      <meta charset="UTF-8">
+      <title>Clicker Game</title>
+	  <link rel="stylesheet" href="style.css">
+      <style>
+         body { font-family: Arial; text-align: center; }
+         button { padding: 10px 20px; margin: 5px; }
+      </style>
+   </head>
+   <body>
+      <h1>Clicker Game</h1>
+      <p>Punkty: <span id="points">0</span></p>
+      <button onclick="clickButton()">Kliknij mnie!</button>
+      <h2>Ulepszenia</h2>
+      <button onclick="buyClickUpgrade()">Lepsze kliknięcie (<span id="clickCost">10</span>)</button>
+      <button onclick="buyPassiveUpgrade()">Auto-punkty (<span id="passiveCost">20</span>)</button>
+      <script>
+         let points = 0;
+         let clickPower = 1;
+         let passiveIncome = 0;
+         
+         let clickCost = 10;
+         let passiveCost = 20;
+         
+         function loadGame() {
+             points = parseInt(localStorage.getItem("points")) || 0;
+             clickPower = parseInt(localStorage.getItem("clickPower")) || 1;
+             passiveIncome = parseInt(localStorage.getItem("passiveIncome")) || 0;
+             clickCost = parseInt(localStorage.getItem("clickCost")) || 10;
+             passiveCost = parseInt(localStorage.getItem("passiveCost")) || 20;
+         
+             let lastTime = localStorage.getItem("lastTime");
+             if (lastTime) {
+                 let diff = Math.floor((Date.now() - lastTime) / 1000);
+                 points += diff * passiveIncome;
+             }
+         }
+         
+         function saveGame() {
+             localStorage.setItem("points", points);
+             localStorage.setItem("clickPower", clickPower);
+             localStorage.setItem("passiveIncome", passiveIncome);
+             localStorage.setItem("clickCost", clickCost);
+             localStorage.setItem("passiveCost", passiveCost);
+             localStorage.setItem("lastTime", Date.now());
+         }
+         
+         function clickButton() {
+             points += clickPower;
+             update();
+         }
+         
+         function buyClickUpgrade() {
+             if (points >= clickCost) {
+                 points -= clickCost;
+                 clickPower++;
+                 clickCost = Math.floor(clickCost * 1.5);
+                 update();
+             }
+         }
+         
+         function buyPassiveUpgrade() {
+             if (points >= passiveCost) {
+                 points -= passiveCost;
+                 passiveIncome++;
+                 passiveCost = Math.floor(passiveCost * 1.5);
+                 update();
+             }
+         }
+         
+         function update() {
+             document.getElementById("points").innerText = points;
+             document.getElementById("clickCost").innerText = clickCost;
+             document.getElementById("passiveCost").innerText = passiveCost;
+             saveGame();
+         }
+         
+         setInterval(() => {
+             points += passiveIncome;
+             update();
+         }, 1000);
+         
+         loadGame();
+         update();
+      </script>
+   </body>
+</html>
