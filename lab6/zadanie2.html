@@ -1,0 +1,101 @@
+<html>
+   <head>
+      <meta charset="utf-8">
+      <style>
+         #reset {display:inline-block;}
+         #stop {display:none;}
+      </style>
+   </head>
+   <body>
+      <h1 id="czas">
+         <span id="godziny">00</span>:<span id="minuty">00</span>:<span id="sekundy">00</span>
+      </h1>
+      <button id = "start">START</button>
+      <button id = "zapisz">ZAPISZ</button>
+      <button id = "stop">STOP</button>
+      <button id = "reset">RESET</button>
+      <p id = "stan_stopera"></p>
+      <ul id = "zapisane_czasy">
+      </ul>
+      <script>
+         let sekundy = 0;
+         let minuty = 0;
+         let godziny = 0;
+         let interval = null;
+         
+         const godzinyEl = document.getElementById("godziny");
+         const minutyEl = document.getElementById("minuty");
+         const sekundyEl = document.getElementById("sekundy");
+         
+         const startBtn = document.getElementById("start");
+         const stopBtn = document.getElementById("stop");
+         const resetBtn = document.getElementById("reset");
+         const zapiszBtn = document.getElementById("zapisz");
+         
+         const stan = document.getElementById("stan_stopera");
+         const lista = document.getElementById("zapisane_czasy");
+         
+         function formatuj(czas) {
+             return czas < 10 ? "0" + czas : czas;
+         }
+         
+         function aktualizujCzas() {
+             sekundy++;
+             if (sekundy === 60) {
+                 sekundy = 0;
+                 minuty++;
+             }
+             if (minuty === 60) {
+                 minuty = 0;
+                 godziny++;
+             }
+         
+             godzinyEl.textContent = formatuj(godziny);
+             minutyEl.textContent = formatuj(minuty);
+             sekundyEl.textContent = formatuj(sekundy);
+         }
+         
+         startBtn.onclick = () => {
+             if (!interval) {
+                 interval = setInterval(aktualizujCzas, 1000);
+                 stan.textContent = "Trwa odliczanie...";
+         
+                 startBtn.style.display = "none";
+                 stopBtn.style.display = "inline-block";
+                 resetBtn.style.display = "none";
+             }
+         };
+         
+         stopBtn.onclick = () => {
+             clearInterval(interval);
+             interval = null;
+             stan.textContent = "Wstrzymano odliczanie.";
+         
+             startBtn.style.display = "inline-block";
+             stopBtn.style.display = "none";
+             resetBtn.style.display = "inline-block";
+         };
+         
+         resetBtn.onclick = () => {
+             sekundy = 0;
+             minuty = 0;
+             godziny = 0;
+         
+             godzinyEl.textContent = "00";
+             minutyEl.textContent = "00";
+             sekundyEl.textContent = "00";
+         
+             lista.innerHTML = "";
+             stan.textContent = "Zresetowano stoper.";
+         
+             resetBtn.style.display = "none";
+         };
+         
+         zapiszBtn.onclick = () => {
+             const li = document.createElement("li");
+             li.textContent = `${formatuj(godziny)}:${formatuj(minuty)}:${formatuj(sekundy)}`;
+             lista.appendChild(li);
+         };
+      </script>
+    </body>
+</html>
